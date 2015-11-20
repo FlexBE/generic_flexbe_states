@@ -5,7 +5,7 @@ from flexbe_core.proxy import ProxyActionClient
 
 from actionlib_msgs.msg import GoalStatus
 from move_base_msgs.msg import *
-from geometry_msgs.msg import Pose, Point, Quaternion
+from geometry_msgs.msg import Pose, Point, Quaternion, Pose2D
 from tf import transformations
 
 """
@@ -18,19 +18,17 @@ class MoveBaseState(EventState):
     """
     Navigates a robot to a desired position and orientation using move_base.
 
-    -- target_pose     float[]     Pose to navigate to [x,y,theta] in [m,m,deg]
+    ># waypoint     Pose2D      Target waypoint for navigation.
 
     <= arrived                  Navigation to target pose succeeded.
     <= failed                   Navigation to target pose failed.
     """
 
-    def __init__(self, target_pose):
+    def __init__(self):
         """Constructor"""
 
-        super(MoveBaseState, self).__init__(outcomes = ['arrived', 'failed'])
-
-
-        self._target_pose = target_pose
+        super(MoveBaseState, self).__init__(outcomes = ['arrived', 'failed'],
+                                            input_keys = ['waypoint'])
 
         self._action_topic = "/move_base"
 
@@ -69,8 +67,8 @@ class MoveBaseState(EventState):
         # Create and populate action goal
         goal = MoveBaseGoal()
 
-        pt = Point(x = self._target_pose[0], y = self._target_pose[1])
-        qt = transformations.quaternion_from_euler(0, 0, self._target_pose[2])
+        pt = Point(x = userdata.waypoint.x, y = userdata.waypoint.y)
+        qt = transformations.quaternion_from_euler(0, 0, userdata.waypoint.theta)
 
         goal.target_pose.pose = Pose(position = pt,
                                      orientation = Quaternion(*qt))
