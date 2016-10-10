@@ -42,8 +42,7 @@ class SrdfStateToMoveit(EventState):
                 '''
                 Constructor
                 '''
-                super(SrdfStateToMoveit, self).__init__(outcomes=['reached', 'planning_failed', 'control_failed', 'param_error'],
-                                                                                        input_keys=['joint_config'])
+                super(SrdfStateToMoveit, self).__init__(outcomes=['reached', 'planning_failed', 'control_failed', 'param_error'])
 
 
                 self._config_name  = config_name
@@ -57,8 +56,11 @@ class SrdfStateToMoveit(EventState):
                 self._success = False
 
                 self._srdf_param = None
-                if rospy.has_param("robot_description_semantic"):
-                        self._srdf_param = rospy.get_param("robot_description_semantic")
+                if rospy.has_param("/robot_description_semantic"):
+                        self._srdf_param = rospy.get_param("/robot_description_semantic")
+                else:
+                        Logger.logerror('Unable to get parameter: /robot_description_semantic')
+
                 self._param_error = False
                 self._srdf = None
 
@@ -106,9 +108,9 @@ class SrdfStateToMoveit(EventState):
                         return
 
                 try:
-                        self._srdf = ET.fromstring(self._srdf_param).getroot()
+                        self._srdf = ET.fromstring(self._srdf_param)
                 except Exception as e:
-                        Logger.logwarn('Unable to parse given SRDF parameter: %s\n%s' % (self._srdf_param, str(e)))
+                        Logger.logwarn('Unable to parse given SRDF parameter: /robot_description_semantic')
                         self._param_error = True
 
                 if not self._param_error:
@@ -133,8 +135,8 @@ class SrdfStateToMoveit(EventState):
                                 return 'param_error'
 
                         try:
-                                userdata.joint_config = [float(j.attrib['value']) for j in config.iter('joint')]
-                                self._joint_names     = [str(j.attrib['name']) for j in config.iter('joint')]
+                                self._joint_config = [float(j.attrib['value']) for j in config.iter('joint')]
+                                self._joint_names  = [str(j.attrib['name']) for j in config.iter('joint')]
                         except Exception as e:
                                 Logger.logwarn('Unable to parse joint values from SRDF:\n%s' % str(e))
                                 return 'param_error'
@@ -145,7 +147,7 @@ class SrdfStateToMoveit(EventState):
                         action_goal.request.group_name = self._move_group
                         goal_constraints = Constraints()
                         for i in range(len(self._joint_names)):
-                                goal_constraints.joint_constraints.append(JointConstraint(joint_name=self._joint_names[i], position=userdata.joint_config[i]))
+                                goal_constraints.joint_constraints.append(JointConstraint(joint_name=self._joint_names[i], position=self._joint_config[i]))
                         action_goal.request.goal_constraints.append(goal_constraints)
 
                         try:
