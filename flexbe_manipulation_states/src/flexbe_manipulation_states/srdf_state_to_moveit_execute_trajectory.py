@@ -26,10 +26,10 @@ class SrdfStateToMoveitExecute(EventState):
         -- move_group           string              Name of the move group to be used for planning.
 
         -- duration             float               Duration of the execution
-																Default to 1 second
+                                                            Default to 1 second
 
         -- action_topic         string              Topic on which MoveIt is listening for action calls.
-																Defualt to: /execute_kinematic_path
+                                                            Defualt to: /execute_kinematic_path
 
         -- robot_name           string              Optional name of the robot to be used.
                                                                 If left empty, the first one found will be used
