@@ -44,7 +44,7 @@ class SrdfStateToMoveitExecute(EventState):
 
         '''
 
-    def __init__(self, config_name, move_group, duration=1.0, action_topic='/execute_kinematic_path', robot_name=""):
+    def __init__(self, config_name, move_group, duration=1.0, wait_for_execution=True, action_topic='/execute_kinematic_path', robot_name=""):
         '''
                 Constructor
                 '''
@@ -55,6 +55,7 @@ class SrdfStateToMoveitExecute(EventState):
         self._robot_name   = robot_name
         self._move_group   = move_group
         self._duration     = duration
+        self._wait_for_execution = wait_for_execution
         self._action_topic = action_topic
         self._client       = ProxyServiceCaller({self._action_topic: ExecuteKnownTrajectory})
 
@@ -140,16 +141,12 @@ class SrdfStateToMoveitExecute(EventState):
             # Action Initialization
             action_goal = ExecuteKnownTrajectoryRequest()  # ExecuteTrajectoryGoal()
             action_goal.trajectory.joint_trajectory.header.stamp = rospy.Time.now() + rospy.Duration(0.2)
-            action_goal.trajectory.joint_trajectory.joint_names = ['']*len(self._joint_names)
-            joint_trajectory_point = JointTrajectoryPoint()
-            action_goal.trajectory.joint_trajectory.points = [joint_trajectory_point]
-            joint_trajectory_point.positions = [0.0]*len(self._joint_names)
-            joint_trajectory_point.time_from_start = rospy.Duration(self._duration)
-            action_goal.wait_for_execution = True
+            action_goal.trajectory.joint_trajectory.joint_names = self._joint_names
+            action_goal.trajectory.joint_trajectory.points = [JointTrajectoryPoint()]
+            action_goal.trajectory.joint_trajectory.points[0].time_from_start = rospy.Duration(self._duration)
+            action_goal.wait_for_execution = self._wait_for_execution
 
-            for i in range(len(self._joint_names)):
-                action_goal.trajectory.joint_trajectory.joint_names[i] = self._joint_names[i]
-                action_goal.trajectory.joint_trajectory.points[0].positions[i] = self._joint_config[i]
+            action_goal.trajectory.joint_trajectory.points[0].positions = self._joint_config
 
             try:
                 self._response = self._client.call(self._action_topic, action_goal)
