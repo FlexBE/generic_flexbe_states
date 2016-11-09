@@ -150,7 +150,7 @@ class SrdfStateToMoveitExecute(EventState):
 
             try:
                 self._response = self._client.call(self._action_topic, action_goal)
-                Logger.loginfo("Execute Known Trajectory Service requested: \n" + str(self._action_topic) + " " + str(action_goal))
+                Logger.loginfo("Execute Known Trajectory Service requested: \n" + str(self._action_topic))
             except rospy.ServiceException as exc:
                 Logger.logwarn("Execute Known Trajectory Service did not process request: \n" + str(exc))
                 self._request_failed = True
