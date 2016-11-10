@@ -38,7 +38,7 @@ class SrdfStateToMoveit(EventState):
 
         '''
 
-        def __init__(self, config_name, move_group, action_topic = '/move_group', robot_name = ""):
+        def __init__(self, config_name, move_group="", action_topic = '/move_group', robot_name=""):
                 '''
                 Constructor
                 '''
@@ -129,6 +129,7 @@ class SrdfStateToMoveit(EventState):
                                 if (self._move_group == '' or self._move_group == c.attrib['group']) \
                                 and c.attrib['name'] == self._config_name:
                                         config = c
+                                        self._move_group = c.attrib['group'] #Set move group name in case it was not defined
                                         break
                         if config is None:
                                 Logger.logwarn('Did not find config name in SRDF: %s' % self._config_name)
