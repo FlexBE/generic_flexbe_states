@@ -141,7 +141,7 @@ class SrdfStateToMoveitExecute(EventState):
 
             # Action Initialization
             action_goal = ExecuteKnownTrajectoryRequest()  # ExecuteTrajectoryGoal()
-            action_goal.trajectory.joint_trajectory.header.stamp = rospy.Time.now() + rospy.Duration(0.3)
+            #action_goal.trajectory.joint_trajectory.header.stamp = rospy.Time.now() + rospy.Duration(0.3)
             action_goal.trajectory.joint_trajectory.joint_names = self._joint_names
             action_goal.trajectory.joint_trajectory.points = [JointTrajectoryPoint()]
             action_goal.trajectory.joint_trajectory.points[0].time_from_start = rospy.Duration(self._duration)
