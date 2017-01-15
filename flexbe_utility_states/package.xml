@@ -15,4 +15,8 @@
   <run_depend>flexbe_testing</run_depend>
   <run_depend>roslaunch</run_depend>
 
+  <export>
+    <flexbe_states />
+  </export>
+
 </package>
