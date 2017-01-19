@@ -29,7 +29,7 @@ class SrdfStateToMoveit(EventState):
                                                                 If left empty, the first one found will be used
                                                                 (only required if multiple robots are specified in the same file).
 
-        ># joint_config         float[]             Target configuration of the joints.
+        ># joint_values         float[]             Target configuration of the joints.
                                                                         Same order as their corresponding names in joint_names.
 
         <= reached                                  Target joint configuration has been reached.
@@ -42,7 +42,8 @@ class SrdfStateToMoveit(EventState):
                 '''
                 Constructor
                 '''
-                super(SrdfStateToMoveit, self).__init__(outcomes=['reached', 'planning_failed', 'control_failed', 'param_error'])
+                super(SrdfStateToMoveit, self).__init__(outcomes=['reached', 'planning_failed', 'control_failed', 'param_error'],
+                                                        output_keys=['config_name', 'move_group', 'robot_name',  'action_topic', 'joint_values', 'joint_names'])
 
 
                 self._config_name  = config_name
@@ -119,6 +120,7 @@ class SrdfStateToMoveit(EventState):
                         for r in self._srdf.iter('robot'):
                                 if self._robot_name == '' or self._robot_name == r.attrib['name']:
                                         robot = r
+                                        userdata.robot_name = robot  # Save robot name to output key
                                         break
                         if robot is None:
                                 Logger.logwarn('Did not find robot name in SRDF: %s' % self._robot_name)
@@ -129,7 +131,9 @@ class SrdfStateToMoveit(EventState):
                                 if (self._move_group == '' or self._move_group == c.attrib['group']) \
                                 and c.attrib['name'] == self._config_name:
                                         config = c
-                                        self._move_group = c.attrib['group'] #Set move group name in case it was not defined
+                                        self._move_group = c.attrib['group']  # Set move group name in case it was not defined
+                                        userdata.config_name = config           # Save configuration name to output key
+                                        userdata.move_group  = self._move_group  # Save move_group to output key
                                         break
                         if config is None:
                                 Logger.logwarn('Did not find config name in SRDF: %s' % self._config_name)
@@ -138,12 +142,14 @@ class SrdfStateToMoveit(EventState):
                         try:
                                 self._joint_config = [float(j.attrib['value']) for j in config.iter('joint')]
                                 self._joint_names  = [str(j.attrib['name']) for j in config.iter('joint')]
+                                userdata.joint_values = self._joint_config  # Save joint configuration to output key
+                                userdata.joint_names  = self._joint_names  # Save joint names to output key
                         except Exception as e:
                                 Logger.logwarn('Unable to parse joint values from SRDF:\n%s' % str(e))
                                 return 'param_error'
 
 
-                        #Action Initialization
+                        # Action Initialization
                         action_goal = MoveGroupGoal()
                         action_goal.request.group_name = self._move_group
                         goal_constraints = Constraints()
@@ -153,6 +159,7 @@ class SrdfStateToMoveit(EventState):
 
                         try:
                                 self._client.send_goal(self._action_topic, action_goal)
+                                userdata.action_topic = self._action_topic  # Save action topic to output key
                         except Exception as e:
                                 Logger.logwarn('Failed to send action goal for group: %s\n%s' % (self._move_group, str(e)))
                                 self._planning_failed = True
