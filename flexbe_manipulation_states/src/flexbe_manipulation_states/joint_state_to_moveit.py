@@ -18,15 +18,18 @@ class JointStateToMoveit(EventState):
         '''
         State to send a joint state configuration to MoveIt to plan and move.
 
-        -- config_name          string              Name of the joint configuration of interest.
+        ># config_name          string              Name of the joint configuration of interest.
 
-        -- move_group           string              Name of the move group to be used for planning.
+        ># move_group           string              Name of the move group to be used for planning.
 
-        -- action_topic         string              Topic on which MoveIt is listening for action calls.
+        ># action_topic         string              Topic on which MoveIt is listening for action calls.
 
-        -- robot_name           string              Optional name of the robot to be used.
+        ># robot_name           string              Optional name of the robot to be used.
                                                                 If left empty, the first one found will be used
                                                                 (only required if multiple robots are specified in the same file).
+
+        ># joint_names          string[]            Names of the target joints.
+                                                                        Same order as their corresponding names in joint_values.
 
         ># joint_values         float[]             Target configuration of the joints.
                                                                         Same order as their corresponding names in joint_names.
