@@ -152,9 +152,13 @@ class SrdfStateToMoveit(EventState):
                         # Action Initialization
                         action_goal = MoveGroupGoal()
                         action_goal.request.group_name = self._move_group
+                        action_goal.request.allowed_planning_time = 1.0
                         goal_constraints = Constraints()
                         for i in range(len(self._joint_names)):
-                                goal_constraints.joint_constraints.append(JointConstraint(joint_name=self._joint_names[i], position=self._joint_config[i]))
+                                goal_constraints.joint_constraints.append(JointConstraint(
+                                        joint_name=self._joint_names[i],
+                                        position=self._joint_config[i], 
+                                        weight=1.0))
                         action_goal.request.goal_constraints.append(goal_constraints)
 
                         try:
