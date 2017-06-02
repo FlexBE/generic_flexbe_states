@@ -6,17 +6,12 @@ import rospy
 from flexbe_core.proxy import ProxyPublisher
 from geometry_msgs.msg import Twist
 
-"""Created on June. 21, 2017
-
-@author: Alireza Hosseini
-"""
-
 
 class PublishTwistState(EventState):
 	"""
 	Publishes a velocity command from userdata.
 
-	-- topic 		string 			Topic to which the velocity command will be published.
+	-- topic 		string 			Topic to which the pose will be published.
 
 	># twist		Twist			Velocity command to be published.
 
