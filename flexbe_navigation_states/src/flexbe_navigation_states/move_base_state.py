@@ -88,3 +88,9 @@ class MoveBaseState(EventState):
         if not self._client.has_result(self._action_topic):
             self._client.cancel(self._action_topic)
             Logger.loginfo('Cancelled active action goal.')
+
+    #Canceling move base goal on behavior stop event
+    def on_stop(self):
+        if not self._client.has_result(self._action_topic):
+            self._client.cancel(self._action_topic)
+            Logger.loginfo('Cancelled active action goal.')
