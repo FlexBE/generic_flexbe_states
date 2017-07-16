@@ -82,9 +82,16 @@ class MoveBaseState(EventState):
         except Exception as e:
             Logger.logwarn("Unable to send navigation action goal:\n%s" % str(e))
             self._failed = True
-
+            
+    def cancel_active_goals(self):
+        if self._client.is_available(self._action_topic):
+            if self._client.is_active(self._action_topic):
+                if not self._client.has_result(self._action_topic):
+                    self._client.cancel(self._action_topic)
+                    Logger.loginfo('Cancelled move_base active action goal.')
 
     def on_exit(self, userdata):
-        if not self._client.has_result(self._action_topic):
-            self._client.cancel(self._action_topic)
-            Logger.loginfo('Cancelled active action goal.')
+        self.cancel_active_goals()
+
+    def on_stop(self):
+        self.cancel_active_goals()
