@@ -60,7 +60,7 @@ class SrdfStateToMoveit(EventState):
                 if rospy.has_param("/robot_description_semantic"):
                         self._srdf_param = rospy.get_param("/robot_description_semantic")
                 else:
-                        Logger.logerror('Unable to get parameter: /robot_description_semantic')
+                        Logger.logerr('Unable to get parameter: /robot_description_semantic')
 
                 self._param_error = False
                 self._srdf = None
