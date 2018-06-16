@@ -21,6 +21,10 @@ catkin_package(
 # use add_library() or add_executable() as required
 #add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SRCS})
 
+# This installation of the src directory is redundant (modules are installed by
+# setup.py) but is necessary for the FlexBE App to find the states.
+install(DIRECTORY src DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
 # install executables
 #install(PROGRAMS bin/hello
 #        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
