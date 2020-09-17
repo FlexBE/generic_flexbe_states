@@ -1,0 +1,5 @@
+# Declare state to be tested
+path: flexbe_utility_states.publish_pose_state
+class: PublishPoseState
+
+import_only: True
