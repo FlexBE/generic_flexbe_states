@@ -36,7 +36,7 @@ class GetJointValuesDynState(EventState):
 		Constructor
 		'''
 		super(GetJointValuesDynState, self).__init__(
-			outcomes=['retrieved'],
+			outcomes=['retrieved', 'timeout'],
 			output_keys=['joint_values'],
 			input_keys=['joint_names'])
 

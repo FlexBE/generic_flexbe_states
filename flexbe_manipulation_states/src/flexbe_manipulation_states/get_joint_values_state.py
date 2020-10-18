@@ -33,8 +33,8 @@ class GetJointValuesState(EventState):
 		'''
 		Constructor
 		'''
-		super(GetJointValuesState, self).__init__(outcomes=['retrieved'],
-												output_keys=['joint_values'])
+		super(GetJointValuesState, self).__init__(outcomes=['retrieved', 'timeout'],
+													output_keys=['joint_values'])
 
 		self._topic = joint_states_topic
 		self._sub = ProxySubscriberCached({self._topic: JointState})
