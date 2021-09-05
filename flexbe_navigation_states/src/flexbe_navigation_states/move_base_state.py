@@ -4,38 +4,46 @@ from flexbe_core import EventState, Logger
 from flexbe_core.proxy import ProxyActionClient
 
 from actionlib_msgs.msg import GoalStatus
-from move_base_msgs.msg import *
-from geometry_msgs.msg import Pose, Point, Quaternion, Pose2D
-from tf import transformations
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from geometry_msgs.msg import PoseStamped, Point, Quaternion
+import rospy
 
 """
 Created on 11/19/2015
 
 @author: Spyros Maniatopoulos
+
+Updated on 09/04/2021
+@github/tbazina
 """
 
 class MoveBaseState(EventState):
     """
     Navigates a robot to a desired position and orientation using move_base.
 
-    ># waypoint     Pose2D      Target waypoint for navigation.
+    -- action_topic str                 move_base action topic, (/move_base)
+    ># waypoint     PoseStamped         Target waypoint for navigation.
 
-    <= arrived                  Navigation to target pose succeeded.
-    <= failed                   Navigation to target pose failed.
+    <= arrived                          Navigation to target pose succeeded.
+    <= failed                           Navigation to target pose failed.
+    <= preempted                        Navigation to target pose preempted.
     """
 
-    def __init__(self):
+    def __init__(self, action_topic):
         """Constructor"""
 
-        super(MoveBaseState, self).__init__(outcomes = ['arrived', 'failed'],
-                                            input_keys = ['waypoint'])
+        super(MoveBaseState, self).__init__(
+            outcomes = ['arrived', 'failed', 'preempted'],
+            input_keys = ['waypoint']
+            )
 
-        self._action_topic = "/move_base"
+        self._action_topic = action_topic
 
         self._client = ProxyActionClient({self._action_topic: MoveBaseAction})
 
         self._arrived = False
         self._failed = False
+        self._preempted = False
 
 
     def execute(self, userdata):
@@ -45,6 +53,8 @@ class MoveBaseState(EventState):
             return 'arrived'
         if self._failed:
             return 'failed'
+        if self._preempted:
+            return 'preempted'
 
         if self._client.has_result(self._action_topic):
             status = self._client.get_state(self._action_topic)
@@ -56,6 +66,11 @@ class MoveBaseState(EventState):
                 Logger.logwarn('Navigation failed: %s' % str(status))
                 self._failed = True
                 return 'failed'
+            elif status == GoalStatus.PREEMPTED:
+                Logger.logwarn('Navigation preempted: %s' % str(status))
+                self._preempted = True
+                return 'preempted'
+
 
 
     def on_enter(self, userdata):
@@ -63,18 +78,13 @@ class MoveBaseState(EventState):
 
         self._arrived = False
         self._failed = False
+        self._preempted = False
 
         # Create and populate action goal
         goal = MoveBaseGoal()
 
-        pt = Point(x = userdata.waypoint.x, y = userdata.waypoint.y)
-        qt = transformations.quaternion_from_euler(0, 0, userdata.waypoint.theta)
-
-        goal.target_pose.pose = Pose(position = pt,
-                                     orientation = Quaternion(*qt))
-
-        goal.target_pose.header.frame_id = "odom"
-        # goal.target_pose.header.stamp.secs = 5.0
+        goal.target_pose = userdata.waypoint
+        goal.target_pose.header.stamp = rospy.Time.now()
 
         # Send the action goal for execution
         try:
@@ -82,7 +92,7 @@ class MoveBaseState(EventState):
         except Exception as e:
             Logger.logwarn("Unable to send navigation action goal:\n%s" % str(e))
             self._failed = True
-            
+
     def cancel_active_goals(self):
         if self._client.is_available(self._action_topic):
             if self._client.is_active(self._action_topic):
