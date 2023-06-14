@@ -1,30 +1,17 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(flexbe_utility_states)
 
-find_package(catkin REQUIRED)
+find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
 
-## Uncomment this if the package has a setup.py. This macro ensures
-## modules and global scripts declared therein get installed
-## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-catkin_python_setup()
+INSTALL(DIRECTORY
+    tests
+    DESTINATION share/${PROJECT_NAME}
+)
 
-# specify catkin-specific information
-# INCLUDE_DIRS - The exported include paths (i.e. cflags) for the package
-# LIBRARIES - The exported libraries from the project
-# CATKIN_DEPENDS - Other catkin projects that this project depends on
-# DEPENDS - Non-catkin CMake projects that this project depends on
-# CFG_EXTRAS - Additional configuration options
-catkin_package(
-    INCLUDE_DIRS src
-    LIBRARIES ${PROJECT_NAME})
+# Install Python modules
+ament_python_install_package(${PROJECT_NAME})
 
-# use add_library() or add_executable() as required
-#add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SRCS})
-
-# This installation of the src directory is redundant (modules are installed by
-# setup.py) but is necessary for the FlexBE App to find the states.
-install(DIRECTORY src DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-
-# install executables
-#install(PROGRAMS bin/hello
-#        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+ament_package()

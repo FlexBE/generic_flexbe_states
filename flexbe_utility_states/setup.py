@@ -1,11 +1,26 @@
-#!/usr/bin/env python
+from setuptools import setup
+from setuptools import find_packages
 
-from distutils.core import setup
-from catkin_pkg.python_setup import generate_distutils_setup
+package_name = 'flexbe_utility_states'
 
-d = generate_distutils_setup(
-    packages = ['flexbe_utility_states'],
-    package_dir = {'': 'src'}
+setup(
+    name=package_name,
+    version='2.0.0',
+    packages=find_packages(),
+    data_files=[
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+    ],
+    install_requires=['setuptools'],
+    zip_safe=True,
+    maintainer='phil',
+    maintainer_email='philsplus@gmail.com',
+    description='TODO: Package description',
+    license='TODO: License declaration',
+    tests_require=['pytest'],
+    entry_points={
+        'console_scripts': [
+        ],
+    },
 )
-
-setup(**d)

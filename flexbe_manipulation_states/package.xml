@@ -1,22 +1,38 @@
-<package>
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+
+<package format="3">
   <name>flexbe_manipulation_states</name>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <description>
      flexbe_manipulation_states provides a collection of robot-agnostic
      states related to manipulation and trajectory execution.
   </description>
-  <maintainer email="schillin@kth.se">Philipp Schillinger</maintainer>
+  <maintainer email="philipp.schillinger@de.bosch.com">Philipp Schillinger</maintainer>
+  <author email="sm2296@cornell.edu">Spyros Maniatopoulos</author>
   <license>BSD</license>
+  <url type="website">https://github.com/FlexBE/generic_flexbe_states</url>
+  <url type="bugtracker">https://github.com/FlexBE/generic_flexbe_states/issues</url>
 
-  <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>rospy</run_depend>
-  <run_depend>flexbe_core</run_depend>
-  <run_depend>tf</run_depend>
-  <run_depend>moveit_msgs</run_depend>
-  <run_depend>sensor_msgs</run_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>control_msgs</exec_depend>
+  <exec_depend>flexbe_core</exec_depend>
+  <exec_depend>flexbe_testing</exec_depend>
+  <exec_depend>moveit_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>tf</exec_depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
 
   <export>
+    <build_type>ament_cmake</build_type>
     <flexbe_states />
   </export>
 
