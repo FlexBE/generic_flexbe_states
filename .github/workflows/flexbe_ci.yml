@@ -12,20 +12,26 @@ jobs:
   test:
     strategy:
       matrix:
-        ros: [kinetic, melodic, noetic]
+        ros: [humble, iron, rolling]
         include:
-          - os: ubuntu-16.04
-            ros: kinetic
-          - os: ubuntu-18.04
-            ros: melodic
-          - os: ubuntu-20.04
-            ros: noetic
-            python: python3
+        - os: ubuntu-22.04
+          ros: humble
+          python: python3
+          ci_branch: ros2-devel
+        - os: ubuntu-22.04
+          ros: iron
+          ci_branch: ros2-devel
+          python: python3
+        - os: ubuntu-22.04
+          ros: rolling
+          python: python3
+          ci_branch: ros2-devel
 
     runs-on: ${{ matrix.os }}
     env:
       ROS_DISTRO: ${{ matrix.ros }}
       PYTHON: ${{ matrix.python }}
+      CI_BRANCH: ${{ matrix.ci_branch }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -33,7 +39,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Prepare CI
         run: |
-          git clone https://github.com/FlexBE/flexbe_ci.git ~/flexbe_ci
+          git clone -b $CI_BRANCH https://github.com/FlexBE/flexbe_ci.git ~/flexbe_ci
           source ~/flexbe_ci/setup.bash $ROS_DISTRO
       - name: Install ROS
         run: ~/flexbe_ci/ci_scripts/install_ros.bash
@@ -43,7 +49,5 @@ jobs:
         run: ~/flexbe_ci/ci_scripts/run_rosinstall.bash
       - name: Test Create Repo
         run: ~/flexbe_ci/ci_scripts/test_create_repo.bash
-      - name: Test Devel Workspace
-        run: ~/flexbe_ci/ci_scripts/run_devel_tests.bash
       - name: Test Install Workspace
         run: ~/flexbe_ci/ci_scripts/run_install_tests.bash

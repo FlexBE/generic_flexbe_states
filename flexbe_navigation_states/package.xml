@@ -20,8 +20,8 @@
   <exec_depend>flexbe_core</exec_depend>
   <exec_depend>flexbe_testing</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
-  <exec_depend>move_base_msgs</exec_depend>
-  <exec_depend>tf_conversions</exec_depend>
+  <!--exec_depend>move_base_msgs</exec_depend-->
+  <!--exec_depend>tf_conversions</exec_depend-->
   <exec_depend>trajectory_msgs</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
