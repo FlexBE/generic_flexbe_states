@@ -1,0 +1,5 @@
+# Declare state to be tested
+path: flexbe_manipulation_states.get_joints_from_srdf_state
+class: GetJointsFromSrdfState
+
+import_only: True

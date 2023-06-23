@@ -1,0 +1,5 @@
+# Declare state to be tested
+path: flexbe_manipulation_states.moveit_to_joints_dyn_state
+class: MoveitToJointsDynState
+
+import_only: True

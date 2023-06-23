@@ -6,7 +6,7 @@ find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 
-INSTALL(DIRECTORY
+install(DIRECTORY
     tests
     DESTINATION share/${PROJECT_NAME}
 )

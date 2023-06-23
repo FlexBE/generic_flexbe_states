@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2023 Philipp Schillinger,  Christopher Newport University
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,38 +27,45 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 
-"""
-    Publishes a pose from userdata so that it can be displayed in rviz.
-"""
+import os
+from ament_index_python.packages import get_package_share_directory
 
-from flexbe_core import EventState
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
 
-from flexbe_core.proxy import ProxyPublisher
-from geometry_msgs.msg import PoseStamped
+import pytest
 
 
-class PublishPoseState(EventState):
-    """
-    Publishes a pose from userdata so that it can be displayed in rviz.
+@pytest.mark.launch_test
+def generate_test_description():
+    path_to_test = os.path.dirname(__file__)
+    flexbe_testing_dir = get_package_share_directory('flexbe_testing')
 
-    -- topic         string           Topic to which the pose will be published.
+    pkg = DeclareLaunchArgument(
+        "pkg",
+        default_value="flexbe_states")
+    path = DeclareLaunchArgument(
+        "path",
+        default_value=path_to_test)
 
-    ># pose            PoseStamped    Pose to be published.
+    flexbe_testing = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(flexbe_testing_dir + "/launch/flexbe_testing.launch"),
+        launch_arguments={
+            'compact_format': "False",
+            'package': LaunchConfiguration("pkg"),
+            "testcases": LaunchConfiguration("path") + "/move_base_state_import.test\n"
+        }.items()
+    )
 
-    <= done            Pose has been published.
-
-    """
-
-    def __init__(self, topic):
-        """Constructor"""
-        super().__init__(outcomes=['done'],
-                         input_keys=['pose'])
-
-        self._topic = topic
-        self._pub = ProxyPublisher({self._topic: PoseStamped})
-
-    def execute(self, userdata):
-        return 'done'
-
-    def on_enter(self, userdata):
-        self._pub.publish(self._topic, userdata.pose)
+    return (
+        LaunchDescription([
+            pkg,
+            path,
+            flexbe_testing
+        ]),
+        {
+            'flexbe_testing': flexbe_testing,
+        }
+    )

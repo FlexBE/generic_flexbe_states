@@ -8,8 +8,9 @@
      flexbe_navigation_states provides a collection of robot-agnostic
      states related to mobile robot navigation.
   </description>
-  <maintainer email="philipp.schillinger@de.bosch.com">Philipp Schillinger</maintainer>
   <author email="sm2296@cornell.edu">Spyros Maniatopoulos</author>
+  <maintainer email="philsplus@gmail.com">Philipp Schillinger</maintainer>
+  <maintainer email="robotics@cnu.edu">David Conner</maintainer>
   <license>BSD</license>
   <url type="website">https://github.com/FlexBE/generic_flexbe_states</url>
   <url type="bugtracker">https://github.com/FlexBE/generic_flexbe_states/issues</url>
