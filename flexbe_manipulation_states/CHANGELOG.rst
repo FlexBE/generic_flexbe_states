@@ -2,8 +2,8 @@
 Changelog for package flexbe_manipulation_states
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2023-06-23)
+------------------
 * pylint testing with colcon test; flag some ROS 2 conversion issues; linter cleanup
 * remove non-standard packages from rosdepend; update .github CI
 * initial release of ROS 2 build; mostly untested other than some basic imports
