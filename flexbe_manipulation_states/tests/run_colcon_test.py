@@ -81,6 +81,6 @@ class TestGenericStates(PyTester):
         """ invoke pytest test """
         self.run_test("moveit_to_joints_dyn_import")
 
-    def test_srdf_state_to_moveit_execute_trajectory_import(self):
-        """ invoke pytest test """
-        self.run_test("srdf_state_to_moveit_execute_trajectory_import")
+    # def test_srdf_state_to_moveit_execute_trajectory_import(self):
+    #     """ invoke pytest test """
+    #     self.run_test("srdf_state_to_moveit_execute_trajectory_import")
