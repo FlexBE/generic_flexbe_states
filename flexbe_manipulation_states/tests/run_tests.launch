@@ -1,0 +1,22 @@
+<launch>
+        <arg name="path" value="$(find flexbe_manipulation_states)/tests" />
+
+        <!-- Run with simulation. -->
+
+        <include file="$(find flexbe_testing)/launch/flexbe_testing.launch">
+                <arg name="compact_format" value="true" />
+                <arg name="testcases" value="
+
+                        $(arg path)/get_joint_values_dyn_state_import.test
+                        $(arg path)/get_joints_from_srdf_group_state_import.test
+                        $(arg path)/get_joints_from_srdf_state_import.test
+                        $(arg path)/get_joint_values_state_import.test
+                        $(arg path)/joint_state_to_moveit_state_import.test
+                        $(arg path)/moveit_to_joints_dyn_state_import.test
+                        $(arg path)/moveit_to_joints_state_import.test
+                        $(arg path)/srdf_state_to_moveit_execute_trajectory_state_import.test
+                        $(arg path)/srdf_state_to_moveit_state_import.test
+
+                " />
+        </include>
+</launch>
