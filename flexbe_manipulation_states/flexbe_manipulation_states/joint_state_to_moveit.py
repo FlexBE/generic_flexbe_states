@@ -145,9 +145,9 @@ class JointStateToMoveit(EventState):
         goal_constraints = Constraints()
         for i, jnt_name in enumerate(self._joint_names):
             goal_constraints.joint_constraints.append(JointConstraint(
-                                                          joint_name=jnt_name,
-                                                          position=self._joint_config[i],
-                                                          weight=1.0))
+                                                      joint_name=jnt_name,
+                                                      position=self._joint_config[i],
+                                                      weight=1.0))
         action_goal.request.goal_constraints.append(goal_constraints)
 
         try:

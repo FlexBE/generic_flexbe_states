@@ -86,7 +86,6 @@ class GetJointsFromSrdfGroup(EventState):
 
     def execute(self, userdata):
         """ execute the state """
-
         if self._param_error:
             return 'param_error'
         robot = None

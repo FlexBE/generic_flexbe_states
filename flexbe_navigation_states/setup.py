@@ -13,12 +13,15 @@ setup(
         ('share/' + package_name, ['package.xml']),
     ],
     install_requires=['setuptools'],
+    extras_require={'test': ['pytest']},
     zip_safe=True,
-    maintainer='phil',
-    maintainer_email='philsplus@gmail.com',
-    description='TODO: Package description',
-    license='TODO: License declaration',
-    tests_require=['pytest'],
+    author='phil',
+    author_email='philsplus@gmail.com',
+    maintainer='David Conner',
+    maintainer_email='robotics@cnu.edu',
+    description='flexbe_navigation_states provides a collection of robot-agnostic '
+                'states related to mobile robot navigation.',
+    license='BSD',
     entry_points={
         'console_scripts': [
         ],

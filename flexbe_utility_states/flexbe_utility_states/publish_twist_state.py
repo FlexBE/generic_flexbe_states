@@ -40,6 +40,7 @@ Created on June. 21, 2017
 from flexbe_core import EventState
 
 from flexbe_core.proxy import ProxyPublisher
+
 from geometry_msgs.msg import Twist
 
 

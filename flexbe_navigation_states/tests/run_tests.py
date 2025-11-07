@@ -28,6 +28,7 @@
 
 
 import os
+
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
@@ -40,6 +41,7 @@ import pytest
 
 @pytest.mark.launch_test
 def generate_test_description():
+    """Generate test description."""
     path_to_test = os.path.dirname(__file__)
     flexbe_testing_dir = get_package_share_directory('flexbe_testing')
 

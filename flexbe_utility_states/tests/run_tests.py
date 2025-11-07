@@ -28,6 +28,7 @@
 
 
 import os
+
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
@@ -40,6 +41,7 @@ import pytest
 
 @pytest.mark.launch_test
 def generate_test_description():
+    """Generate test description."""
     path_to_test = os.path.dirname(__file__)
     flexbe_testing_dir = get_package_share_directory('flexbe_testing')
 
@@ -55,10 +57,10 @@ def generate_test_description():
         launch_arguments={
             'compact_format': "False",
             'package': LaunchConfiguration("pkg"),
-            "testcases": LaunchConfiguration("path") + "/publish_pose_import.test\n" +
-                         LaunchConfiguration("path") + "/publish_twist_import.test\n" +
-                         LaunchConfiguration("path") + "/start_record_logs_state_import.test\n" +
-                         LaunchConfiguration("path") + "/stop_record_logs_state_import.test\n"
+            "testcases": (LaunchConfiguration("path") + "/publish_pose_import.test\n"
+                          + LaunchConfiguration("path") + "/publish_twist_import.test\n"
+                          + LaunchConfiguration("path") + "/start_record_logs_state_import.test\n"
+                          + LaunchConfiguration("path") + "/stop_record_logs_state_import.test\n")
         }.items()
     )
 

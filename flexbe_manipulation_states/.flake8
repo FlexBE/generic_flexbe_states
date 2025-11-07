@@ -1,0 +1,6 @@
+[flake8]
+exclude = .git, build, install, dist
+max-line-length = 130
+ignore = B902, W503, D100, D101, D102, D104, D105, D107,
+          D200, D201, D202, D205, D208, D210, D400, D401, D403,
+          I100, I202, Q000

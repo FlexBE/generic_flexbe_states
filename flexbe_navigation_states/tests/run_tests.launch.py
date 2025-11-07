@@ -36,11 +36,12 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.substitutions import LaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+
 from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
-
+    """Generate launch setup for tests."""
     flexbe_testing_dir = get_package_share_directory('flexbe_testing')
     flex_nav_states_test_dir = get_package_share_directory('flexbe_navigation_states')
 

@@ -36,6 +36,7 @@
 from flexbe_core import EventState
 
 from flexbe_core.proxy import ProxyPublisher
+
 from geometry_msgs.msg import PoseStamped
 
 

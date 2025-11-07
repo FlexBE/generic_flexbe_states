@@ -99,7 +99,7 @@ class MoveitToJointsState(EventState):
 
             if result.error_code.val == MoveItErrorCodes.CONTROL_FAILED:
                 Logger.logwarn('Control failed for move action of group:'
-                               f' { self._move_group} (error code: {str(result.error_code)}')
+                               f' {self._move_group} (error code: {str(result.error_code)}')
                 self._control_failed = True
                 return 'control_failed'
 
