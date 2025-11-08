@@ -54,6 +54,8 @@ class GetJointsFromSrdfGroup(EventState):
     -- robot_name     string         Optional name of the robot to be used.
                                 If left empty, the first one found will be used
                                 (only required if multiple robots are specified in the same file).
+    -- srdf_name    string        Optional name of the srdf parameter
+                                (default: "/robot_description_semantic")
 
     #> joint_names string[]     List of joint values for the requested group.
 
@@ -62,7 +64,7 @@ class GetJointsFromSrdfGroup(EventState):
 
     """
 
-    def __init__(self, move_group, robot_name=""):
+    def __init__(self, move_group, robot_name="", srdf_name="/robot_description_semantic"):
         """
         Constructor
         """
@@ -71,23 +73,31 @@ class GetJointsFromSrdfGroup(EventState):
 
         self._move_group = move_group
         self._robot_name = robot_name
+        self._srdf_name = srdf_name
 
         # Check existence of SRDF parameter.
         # Values will only be read during runtime to allow modifications.
         self._srdf_param = None
         try:
-            self._srdf_param = self._node.get_parameter('/robot_description_semantic')
+            self._srdf_param = self._node.get_parameter(self._srdf_name)
         except ParameterNotDeclaredException:
-            Logger.logerr('Unable to get parameter: /robot_description_semantic')
+            Logger.logerr(f"Unable to get srdf parameter: '{self._srdf_name}'")
 
         self._param_error = False
         self._file_error = False
         self._srdf = None
+        self._return_code = None
 
     def execute(self, userdata):
         """ execute the state """
+        if (self._return_code is not None):
+            # Handle blocked transition or error during on_enter
+            return self._return_code
+
         if self._param_error:
+            self._return_code = 'param_error'
             return 'param_error'
+
         robot = None
         for rbt in self._srdf.iter('robot'):
             if self._robot_name in ('', rbt.attrib['name']):
@@ -96,6 +106,7 @@ class GetJointsFromSrdfGroup(EventState):
         if robot is None:
             Logger.logwarn(f'Did not find robot name in SRDF: {self._robot_name}')
             self._param_error = True
+            self._return_code = 'param_error'
             return 'param_error'
 
         group = None
@@ -107,6 +118,7 @@ class GetJointsFromSrdfGroup(EventState):
         if group is None:
             Logger.logwarn(f'Did not find group name in SRDF: {self._move_group}')
             self._param_error = True
+            self._return_code = 'param_error'
             return 'param_error'
 
         try:
@@ -114,14 +126,25 @@ class GetJointsFromSrdfGroup(EventState):
         except Exception as exc:  # pylint: disable=W0703
             Logger.logwarn(f'Unable to parse joint values from SRDF:\n{str(exc)}')
             self._param_error = True
+            self._return_code = 'param_error'
             return 'param_error'
 
+        self._return_code = 'retrieved'
         return 'retrieved'
 
     def on_enter(self, userdata):
         # Parameter check
         if self._srdf_param is None:
             self._param_error = True
+            self._return_code = 'param_error'
+            return
+
+        try:
+            self._srdf_param = self._node.get_parameter(self._srdf_name)
+        except ParameterNotDeclaredException:
+            Logger.logerr(f"Unable to get srdf parameter: '{self._srdf_name}'")
+            self._param_error = True
+            self._return_code = 'param_error'
             return
 
         try:
@@ -129,3 +152,5 @@ class GetJointsFromSrdfGroup(EventState):
         except Exception as exc:  # pylint: disable=W0703
             Logger.logwarn(f'Unable to parse given SRDF parameter: /robot_description_semantic\n{exc}')
             self._param_error = True
+            self._return_code = 'param_error'
+            return

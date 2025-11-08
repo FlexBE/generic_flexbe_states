@@ -123,6 +123,9 @@ class MoveitToJointsDynState(EventState):
 
         action_goal = MoveGroup_Goal()
         action_goal.request.group_name = self._move_group
+        action_goal.request.max_velocity_scaling_factor = 1
+        action_goal.request.max_acceleration_scaling_factor = 1
+
         goal_constraints = Constraints()
         for i, jnt_name in enumerate(self._joint_names):
             goal_constraints.joint_constraints.append(JointConstraint(joint_name=jnt_name,
