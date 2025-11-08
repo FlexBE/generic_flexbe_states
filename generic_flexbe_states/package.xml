@@ -29,7 +29,6 @@
 
   <export>
     <build_type>ament_cmake</build_type>
-    <flexbe_states />
   </export>
 
 </package>
